@@ -1,0 +1,277 @@
+/* Genel Stil */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Arka Plan */
+.background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.7);
+    z-index: -1;
+    opacity: 0.9;
+}
+
+/* Form Container */
+.form-container {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2rem;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    margin: 2rem;
+    border: 5px solid #c9d011;
+}
+
+/* Başlık */
+.form-container h2 {
+    text-align: center;
+    color: #c9d011;
+    font-family: 'Press Start 2P', cursive;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    text-shadow: 0 0 15px rgba(201, 208, 17, 0.7);
+}
+
+/* Form Grupları */
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #c9d011;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(201, 208, 17, 0.3);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    color: #fff;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    border-color: #c9d011;
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Şifre Toggle */
+.password-toggle {
+    position: relative;
+}
+
+.password-toggle i {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #c9d011;
+}
+
+/* Butonlar */
+.button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn-kayit, .btn-geri {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #c9d011;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #c9d011;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+}
+
+.btn-kayit:hover, .btn-geri:hover {
+    background: #c9d011;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(201, 208, 17, 0.7);
+}
+
+/* İletişim Bilgisi */
+.contact-info {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.contact-info a {
+    color: #c9d011;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+    text-shadow: 0 0 10px rgba(201, 208, 17, 0.7);
+}
+
+/* Alert Mesajları */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #c9d011;
+    color: #c9d011;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.alert-success, .alert-danger {
+    text-shadow: 0 0 10px rgba(201, 208, 17, 0.5);
+    padding: 15px;
+    border: 2px solid #c9d011;
+    box-shadow: 0 0 15px rgba(201, 208, 17, 0.3);
+}
+
+.alert .error-text {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #c9d011;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.alert .error-item {
+    font-size: 0.95rem;
+    margin: 0.5rem 0;
+    padding: 8px;
+    background: rgba(201, 208, 17, 0.1);
+    border-radius: 5px;
+    color: #fff;
+    animation: slideIn 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+}
+
+.alert .error-item::before {
+    content: "•";
+    color: #c9d011;
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+@keyframes fadeInError {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Tasarım */
+@media (max-width: 480px) {
+    .form-container {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .form-container h2 {
+        font-size: 1.2rem;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .redirect-message {
+        color: #c9d011;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        font-style: italic;
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            opacity: 0.6;
+        }
+        50% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0.6;
+        }
+    }
+
+    .btn-kayit, .btn-geri {
+        width: 100%;
+    }
+}

@@ -1,0 +1,29 @@
+YAPILAN DEĞİŞİKLİKLER:
+
+1. admin.php dosyasında yapılan değişiklikler:
+   - Session başlatma ve config dosyası include edildi
+   - Paydaş listesi dinamik hale getirildi
+   - Toplam paydaş sayısı dinamik olarak gösteriliyor
+   - Veritabanı sorguları optimize edildi
+   - Hata kontrolü ve boş durum kontrolü eklendi
+
+2. Veritabanı sorguları:
+   - Paydaş sayısı için: SELECT COUNT(*) FROM stakeholders
+   - Paydaş listesi için: SELECT id, name, description, image_filename FROM stakeholders ORDER BY id DESC
+
+3. PHP Yapısı:
+   - while döngüsü kullanılarak paydaşlar listeleniyor
+   - htmlspecialchars ile XSS koruması sağlandı
+   - Düzenle/Sil butonları için data-id özelliği eklendi
+   
+4. Güvenlik İyileştirmeleri:
+   - SQL injection koruması için PDO kullanıldı
+   - XSS koruması için htmlspecialchars eklendi
+   - Form verilerinde filtreleme yapıldı
+
+5. Yeni Özellikler:
+   - Paydaş ekleme modalı
+   - Dinamik paydaş sayısı gösterimi
+   - Düzenle ve sil butonları için JavaScript entegrasyonu
+
+Not: Düzenleme ve silme işlemleri için gerekli JavaScript fonksiyonları admin.js dosyasında oluşturulmalıdır.

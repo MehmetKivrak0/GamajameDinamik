@@ -1,0 +1,82 @@
+/* Ana stil ayarları */
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar özelleştirmeleri */
+.navbar {
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+/* Kart stilleri */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+}
+
+.card-title {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Profil kartı */
+.card-text {
+    margin-bottom: 0.8rem;
+    color: #666;
+}
+
+.card-text span {
+    color: #333;
+    font-weight: 500;
+}
+
+/* Tablo stilleri */
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: #444;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Buton stilleri */
+.btn-primary {
+    background-color: #0056b3;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #004494;
+}
+
+/* Responsive düzenlemeler */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+}

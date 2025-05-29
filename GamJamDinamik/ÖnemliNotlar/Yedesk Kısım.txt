@@ -1,0 +1,46 @@
+<?php
+require_once '../../config.php';
+
+try {
+    $stmt = $pdo->prepare("
+        SELECT id, name, description, image_filename, created_by as username
+        FROM stakeholders
+        ORDER BY id DESC
+    ");
+    $stmt->execute();
+    $stakeholders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $output = '';
+    foreach ($stakeholders as $stakeholder) {
+        $output .= '
+        <div class="partner-card">
+            <div class="card-logo">
+                <img src="../rolweb/payduploads/' . htmlspecialchars($stakeholder['image_filename']) . '" alt="' . htmlspecialchars($stakeholder['name']) . '">
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">' . htmlspecialchars($stakeholder['name']) . '</h5>
+                <small class="text-muted">Ekleyen: ' . htmlspecialchars($stakeholder['username']) . '</small>
+                <p class="card-meta">' . htmlspecialchars($stakeholder['description']) . '</p>
+                <div class="card-tags">
+                    <span class="tag">Teknoloji</span>
+                    <span class="tag">Eğitim</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group">
+                    <button class="btn btn-icon" title="Düzenle" data-id="' . $stakeholder['id'] . '">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-icon" title="Sil" data-id="' . $stakeholder['id'] . '">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>';
+    }
+    
+    echo $output;
+} catch (PDOException $e) {
+    echo "Hata oluştu: " . $e->getMessage();
+}
+?>

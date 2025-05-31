@@ -102,13 +102,20 @@ if (!isset($_SESSION['user_id'])) {
                     <div class="section-header" style="background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(201, 208, 17, 0.3);">
                         <div class="header-top">
                             <div class="header-title">
-                                <h4 style="color: #c9d011; font-family: 'Press Start 2P', system-ui; font-size: 1.5rem; margin: 0;">Paydaşlar</h4>
-                                <?php
-                                $sql ="SELECT COUNT(*) as count FROM stakeholders";
-                                $stmt = $pdo->query($sql);
-                                $stakeholderCount = $stmt->fetchColumn();
-                                ?>
-                                <p style="color: rgba(201, 208, 17, 0.8); margin: 5px 0 0 0;">Toplam <?php echo $stakeholderCount; ?> paydaş</p>
+                                <div style="display: flex; align-items: center; gap: 20px;">
+                                    <div>
+                                        <h4 style="color: #c9d011; font-family: 'Press Start 2P', system-ui; font-size: 1.5rem; margin: 0;">Paydaşlar</h4>
+                                        <?php
+                                        $sql ="SELECT COUNT(*) as count FROM stakeholders";
+                                        $stmt = $pdo->query($sql);
+                                        $stakeholderCount = $stmt->fetchColumn();
+                                        ?>
+                                        <p style="color: rgba(201, 208, 17, 0.8); margin: 5px 0 0 0;">Toplam <?php echo $stakeholderCount; ?> paydaş</p>
+                                    </div>
+                                    <button id="filterStatusButton" class="btn btn-outline-secondary" style="height: fit-content;">
+                                        <i class="fas fa-filter"></i> Tümünü Göster
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="header-bottom">
@@ -172,6 +179,54 @@ if (!isset($_SESSION['user_id'])) {
                     }
                     ?>
                     </div>
+                    
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const filterButton = document.getElementById('filterStatusButton');
+                        let filterState = 'all'; // all, active, inactive
+
+                        filterButton.addEventListener('click', function() {
+                            const cards = document.querySelectorAll('.partner-card');
+                            
+                            switch(filterState) {
+                                case 'all':
+                                    // Sadece aktifleri göster
+                                    cards.forEach(card => {
+                                        if(!card.classList.contains('inactive-partner')) {
+                                            card.style.display = '';
+                                        } else {
+                                            card.style.display = 'none';
+                                        }
+                                    });
+                                    filterButton.innerHTML = '<i class="fas fa-filter"></i> Aktif Paydaşlar';
+                                    filterState = 'active';
+                                    break;
+
+                                case 'active':
+                                    // Sadece pasifleri göster
+                                    cards.forEach(card => {
+                                        if(card.classList.contains('inactive-partner')) {
+                                            card.style.display = '';
+                                        } else {
+                                            card.style.display = 'none';
+                                        }
+                                    });
+                                    filterButton.innerHTML = '<i class="fas fa-filter"></i> Pasif Paydaşlar';
+                                    filterState = 'inactive';
+                                    break;
+
+                                case 'inactive':
+                                    // Hepsini göster
+                                    cards.forEach(card => {
+                                        card.style.display = '';
+                                    });
+                                    filterButton.innerHTML = '<i class="fas fa-filter"></i> Tümünü Göster';
+                                    filterState = 'all';
+                                    break;
+                            }
+                        });
+                    });
+                    </script>
                 </div>
             </div>
         </div>

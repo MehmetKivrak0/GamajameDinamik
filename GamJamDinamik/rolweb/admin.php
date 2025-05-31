@@ -27,6 +27,7 @@ if (!isset($_SESSION['user_id'])) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="scripts/admin.js"></script>
 </head>
 <body>
     <!-- Arka Plan -->
@@ -129,29 +130,38 @@ if (!isset($_SESSION['user_id'])) {
                     
                     <div class="partner-grid mt-4">
                     <?php
-                    $sql = "SELECT id, name, description, image_filename FROM stakeholders ORDER BY id DESC";
+                    $sql = "SELECT id, name, description, image_filename, is_active FROM stakeholders ORDER BY id DESC";
                     $stmt = $pdo->query($sql);
                     while ($stakeholder = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     ?>
-                        <div class="partner-card" data-id="<?php echo $stakeholder['id']; ?>">
+                        <div class="partner-card <?php echo !$stakeholder['is_active'] ? 'inactive-partner' : ''; ?>" data-id="<?php echo $stakeholder['id']; ?>">
                             <div class="card-logo">
                                 <img src="../php/gallery/payduplouds/<?php echo htmlspecialchars($stakeholder['image_filename']); ?>"
                                      alt="<?php echo htmlspecialchars($stakeholder['name']); ?>">
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo htmlspecialchars($stakeholder['name']); ?></h5>
-                                <p class="card-meta"><?php echo htmlspecialchars($stakeholder['description']); ?></p>
+                                <p class="card-meta">
+                                    <?php echo htmlspecialchars($stakeholder['description']); ?>
+                                    <span class="status-badge <?php echo $stakeholder['is_active'] ? 'active' : 'inactive'; ?>">
+                                        <?php echo $stakeholder['is_active'] ? 'Aktif' : 'Pasif'; ?>
+                                    </span>
+                                </p>
                             </div>
                             <div class="card-footer">
                                 <div class="btn-group">
-                        <button class="btn btn-icon" title="Düzenle" onclick="editStakeholder(<?php echo $stakeholder['id']; ?>)">
+                        <button class="btn btn-icon" title="Düzenle" onclick="editStakeholder(<?php echo $stakeholder['id']; ?>)"
+                                <?php echo !$stakeholder['is_active'] ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''; ?>>
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-icon" title="Sil" onclick="deleteStakeholder(<?php echo $stakeholder['id']; ?>)">
+                        <button class="btn btn-icon" title="Sil" onclick="deleteStakeholder(<?php echo $stakeholder['id']; ?>)"
+                                <?php echo !$stakeholder['is_active'] ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''; ?>>
                             <i class="fas fa-trash"></i>
                         </button>
-                        <button class="btn btn-icon" title="Akifliği Ayarla" onclick="toggleStakeholderStatus(<?php echo $stakeholder['id']; ?>)">
-                            <i class="fas fa-toggle-on"></i> </button>
+                        <button class="btn btn-icon toggle-button" onclick="toggleStakeholderStatus(<?php echo $stakeholder['id']; ?>)"
+                                title="<?php echo $stakeholder['is_active'] ? 'Pasif Yap' : 'Aktif Yap'; ?>">
+                            <i class="fas fa-toggle-<?php echo $stakeholder['is_active'] ? 'on' : 'off'; ?>"></i>
+                        </button>
                     </div>
                             </div>
                         </div>
@@ -271,7 +281,5 @@ if (!isset($_SESSION['user_id'])) {
         </div>
     </div>
 
-    <!-- JavaScript -->
-    <script src="scripts/admin.js"></script>
 </body>
 </html>

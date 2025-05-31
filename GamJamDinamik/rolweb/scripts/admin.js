@@ -1,3 +1,44 @@
+
+// Yardımcı fonksiyonları tanımla
+function showNotification(type, message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    document.getElementById('notifications').appendChild(alertDiv);
+
+    setTimeout(() => {
+        if (document.body.contains(alertDiv)) {
+            alertDiv.remove();
+        }
+    }, 3000);
+}
+
+// Global toggle fonksiyonu
+window.toggleStakeholderStatus = function(id) {
+    $.ajax({
+        url: '../php/ogdınamık/stakeholders/toggle_status.php',
+        type: 'POST',
+        data: { id: id },
+        success: function(response) {
+            console.log('Toggle yanıtı:', response);
+            if (response.success) {
+                showNotification('success', response.message);
+                window.location.reload();
+            } else {
+                showNotification('danger', response.message || 'İşlem başarısız oldu');
+            }
+        },
+        error: function() {
+            showNotification('danger', 'Sunucu ile iletişim sırasında bir hata oluştu');
+        }
+    });
+};
+
+// DOM yüklendiğinde çalışacak kodlar
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM yüklendi, uygulama başlatılıyor...');
     
@@ -142,6 +183,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Paydaş silme
     window.deleteStakeholder = function(id) {
+        const button = document.querySelector(`button[onclick*="deleteStakeholder(${id})"]`);
+        if (button.disabled) {
+            showNotification('warning', 'Pasif durumdaki paydaşlar silinemez. Önce aktif hale getirin.');
+            return;
+        }
         if (confirm('Bu paydaşı silmek istediğinizden emin misiniz?')) {
             fetch('../php/ogdınamık/stakeholders/delete.php?id=' + id)
                 .then(response => response.json())
@@ -166,6 +212,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Paydaş düzenleme
     window.editStakeholder = function(id) {
+        const button = document.querySelector(`button[onclick*="editStakeholder(${id})"]`);
+        if (button.disabled) {
+            showNotification('warning', 'Pasif durumdaki paydaşlar düzenlenemez. Önce aktif hale getirin.');
+            return;
+        }
         // Bootstrap modal'ı başlangıçta göster
         const editModal = new bootstrap.Modal(document.getElementById('editStakeholderModal'));
         editModal.show();

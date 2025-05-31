@@ -265,6 +265,19 @@ body {
     border: 2px solid rgba(201, 208, 17, 0.3);
 }
 
+.inactive-partner {
+    border: 2px solid rgba(220, 53, 69, 0.5) !important;
+    background: rgba(220, 53, 69, 0.1) !important;
+}
+
+.inactive-partner .card-title {
+    color: #dc3545 !important;
+}
+
+.inactive-partner .card-meta {
+    color: rgba(220, 53, 69, 0.8) !important;
+}
+
 .partner-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(201, 208, 17, 0.15);
@@ -314,19 +327,53 @@ body {
 }
 
 .btn-icon {
-    padding: 8px 12px;
+    padding: 8px;
     margin: 0 4px;
-    background: transparent;
-    border: 1px solid transparent;
-    color: #666;
-    transition: all 0.3s ease;
-    border-radius: 8px;
+    background: transparent !important;
+    border: none !important;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+}
+
+.btn-icon:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.btn-icon:active {
+    transform: scale(0.95);
+}
+
+.btn-icon i {
+    font-size: 1.2em;
+    transition: color 0.2s ease;
+}
+
+.btn-icon i.fa-toggle-on {
+    color: #28a745 !important;
+}
+
+.btn-icon i.fa-toggle-off {
+    color: #dc3545 !important;
 }
 
 .btn-icon:hover {
     color: #c9d011;
     background: rgba(201, 208, 17, 0.1);
     border-color: rgba(201, 208, 17, 0.2);
+}
+
+.btn-icon.clicked {
+    transform: scale(0.9);
+    transition: transform 0.2s;
+}
+
+.btn-icon:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(201, 208, 17, 0.3);
 }
 
 /* Notification Styles */
@@ -463,4 +510,67 @@ body {
         width: calc(100% - 40px);
         min-width: auto;
     }
+}
+
+/* Aktif/Pasif Durumu Stilleri */
+.inactive-partner {
+    opacity: 0.7;
+    filter: grayscale(0.8);
+    position: relative;
+}
+
+.inactive-partner .card-footer {
+    position: relative;
+    z-index: 2;
+}
+
+.inactive-partner .btn-icon {
+    position: relative;
+    z-index: 3;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.inactive-partner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin-left: 8px;
+    font-weight: bold;
+}
+
+.status-badge.active {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-badge.inactive {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Toggle Button Styles */
+.btn-icon.btn-primary {
+    color: #c9d011;
+    background-color: rgba(201, 208, 17, 0.2);
+    border-color: rgba(201, 208, 17, 0.5);
+}
+
+.btn-icon.btn-secondary {
+    color: #666;
+    background-color: rgba(102, 102, 102, 0.1);
+    border-color: rgba(102, 102, 102, 0.3);
 }

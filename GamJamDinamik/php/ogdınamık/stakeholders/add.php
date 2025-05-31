@@ -37,22 +37,46 @@
             color: white;
         }
         body {
-            background: transparent;
-            padding: 20px;
-            min-height: auto;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 30px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        form {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(201, 208, 17, 0.1);
+            max-width: 600px;
+            width: 100%;
         }
         
         .form-control {
-            background: rgba(0, 0, 0, 0.5) !important;
-            border: 1px solid rgba(201, 208, 17, 0.3) !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 2px solid rgba(201, 208, 17, 0.3) !important;
             color: #c9d011 !important;
-            padding: 0.75rem !important;
-            border-radius: var(--border-radius) !important;
+            padding: 12px 16px !important;
+            border-radius: 8px !important;
+            font-size: 0.95rem;
         }
         
         .form-control:focus {
-            box-shadow: 0 0 0 3px rgba(201, 208, 17, 0.2) !important;
+            box-shadow: 0 0 0 4px rgba(201, 208, 17, 0.15) !important;
             border-color: #c9d011 !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .form-control::placeholder {
+            color: rgba(201, 208, 17, 0.5);
+        }
+
+        .form-control:hover {
+            border-color: rgba(201, 208, 17, 0.5) !important;
         }
 
         .form-label {
@@ -66,21 +90,28 @@
         }
 
         .btn-primary {
-            background: rgba(201, 208, 17, 0.3) !important;
-            color: #c9d011 !important;
-            border: 1px solid rgba(201, 208, 17, 0.5) !important;
-            padding: 0.75rem 1.5rem !important;
-            font-weight: 500 !important;
+            background: #c9d011 !important;
+            color: #1a1a1a !important;
+            border: none !important;
+            padding: 12px 24px !important;
+            font-weight: 600 !important;
             display: inline-flex !important;
             align-items: center !important;
-            gap: 0.5rem !important;
+            gap: 0.75rem !important;
+            border-radius: 8px !important;
+            transition: all 0.3s ease !important;
         }
 
         .btn-primary:hover {
-            background: #c9d011 !important;
+            background: #d4dc12 !important;
             color: #000 !important;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(201, 208, 17, 0.3);
+            box-shadow: 0 8px 20px rgba(201, 208, 17, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(201, 208, 17, 0.2);
         }
 
         .btn-secondary {
@@ -231,6 +262,7 @@
                                 // 3 saniye sonra mesajı gizle
                                 setTimeout(() => {
                                     $message.fadeOut();
+                                    window.location.href = 'WebSayfası/index.html';
                                 }, 3000);
                                 
                                 isImageValid = false; // Formu sıfırla

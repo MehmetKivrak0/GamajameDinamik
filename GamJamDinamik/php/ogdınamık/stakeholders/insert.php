@@ -148,9 +148,9 @@ try {
     }
 
     // İzin verilen dosya türleri
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif','image/webp'];
     if (!in_array($_FILES['image']['type'], $allowedTypes)) {
-        $_SESSION['error'] = 'Sadece JPEG, PNG ve GIF formatında resimler yüklenebilir.';
+        $_SESSION['error'] = 'Sadece JPEG, PNG , GIF Ve WEBP  formatında resimler yüklenebilir.';
         redirect('/rolweb/admin.php#paydas');
     }
 

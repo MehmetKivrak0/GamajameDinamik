@@ -1,6 +1,12 @@
 <?php
 session_start();
 require_once '../php/config.php';
+
+// Oturum kontrolü
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../WebSayfası/index.html");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -19,9 +25,16 @@ require_once '../php/config.php';
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="scripts/admin.js"></script>
 </head>
 <body>
+    <!-- Arka Plan -->
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0;">
+        <!-- Gradient overlay -->
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%); opacity: 0.85; z-index: 1;"></div>
+        <!-- Arka plan resmi -->
+        <div style="background-image: url('../WebSayfası/resim/rg6.png'); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 0; opacity: 0.95;"></div>
+    </div>
+
     <!-- Bildirimler için konteyner -->
     <div id="notifications" class="position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
     <div class="wrapper">
@@ -62,10 +75,10 @@ require_once '../php/config.php';
                     </a>
                 </li>
                 <li class="mt-auto">
-                    <a href="../WebSayfası/index.html" class="nav-link logout">
+                   <span onclick="window.location='../WebSayfası/index.html'" class="nav-link logout" style="cursor: pointer;">
                         <i class="fas fa-right-from-bracket"></i>
                         <span>Güvenli Çıkış</span>
-                    </a>
+                    </span>
                 </li>
             </ul>
         </nav>
@@ -83,22 +96,27 @@ require_once '../php/config.php';
             <div class="tab-content" id="tabContent">
                 <!-- Paydaş Paneli -->
                 <div class="tab-pane" id="paydas">
-                    <div class="section-header">
+                    <div class="section-header" style="background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(201, 208, 17, 0.3);">
                         <div class="header-top">
                             <div class="header-title">
-                                <h4>Paydaşlar</h4>
+                                <h4 style="color: #c9d011; font-family: 'Press Start 2P', system-ui; font-size: 1.5rem; margin: 0;">Paydaşlar</h4>
                                 <?php
                                 $sql ="SELECT COUNT(*) as count FROM stakeholders";
                                 $stmt = $pdo->query($sql);
                                 $stakeholderCount = $stmt->fetchColumn();
                                 ?>
-                                <p>Toplam <?php echo $stakeholderCount; ?> paydaş</p>
+                                <p style="color: rgba(201, 208, 17, 0.8); margin: 5px 0 0 0;">Toplam <?php echo $stakeholderCount; ?> paydaş</p>
                             </div>
                         </div>
                         <div class="header-bottom">
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" placeholder="Paydaş ara...">
+                            <div class="input-group" style="max-width: 500px;">
+                                <input type="text" id="stakeholderSearch" class="form-control" placeholder="Paydaş adına göre ara...">
+                                <button class="btn btn-outline-secondary" type="button" id="searchButton">
+                                    <i class="fas fa-search"></i> Ara
+                                </button>
+                                <button class="btn btn-outline-secondary" type="button" id="clearSearchButton">
+                                    <i class="fas fa-times"></i> Temizle
+                                </button>
                             </div>
                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStakeholderModal">
                                 <i class="fas fa-plus"></i>
@@ -107,32 +125,13 @@ require_once '../php/config.php';
                         </div>
                     </div>
                     
-                    <?php if(isset($_SESSION['success'])): ?>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <?php
-                            echo $_SESSION['success'];
-                            unset($_SESSION['success']);
-                            ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    <?php endif; ?>
-                    <?php if(isset($_SESSION['error'])): ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <?php
-                            echo $_SESSION['error'];
-                            unset($_SESSION['error']);
-                            ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <div class="partner-grid">
+                    <div class="partner-grid mt-4">
                     <?php
                     $sql = "SELECT id, name, description, image_filename FROM stakeholders ORDER BY id DESC";
                     $stmt = $pdo->query($sql);
                     while ($stakeholder = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     ?>
-                        <div class="partner-card">
+                        <div class="partner-card" data-id="<?php echo $stakeholder['id']; ?>">
                             <div class="card-logo">
                                 <img src="../php/gallery/payduplouds/<?php echo htmlspecialchars($stakeholder['image_filename']); ?>"
                                      alt="<?php echo htmlspecialchars($stakeholder['name']); ?>">
@@ -163,45 +162,49 @@ require_once '../php/config.php';
             </div>
         </div>
     </div>
-          
-    <!-- Modal -->
-    <div class="modal fade" id="addStakeholderModal" tabindex="-1" aria-labelledby="addStakeholderModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
+
+    <!-- Ekleme Modal -->
+    <div class="modal fade" id="addStakeholderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background: rgba(0, 0, 0, 0.9); border: 1px solid rgba(201, 208, 17, 0.3);">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addStakeholderModalLabel">Yeni Paydaş Ekle</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                    <h5 class="modal-title" id="addStakeholderModalLabel" style="color: #c9d011; font-family: 'Press Start 2P', system-ui; font-size: 1.2rem;">Yeni Paydaş Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="addStakeholderForm" action="../php/ogdınamık/stakeholders/insert.php" method="POST" enctype="multipart/form-data">
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label for="name" class="form-label">
                                 <i class="fas fa-building me-2"></i>Paydaş Adı
                             </label>
                             <input type="text" class="form-control" id="name" name="name" required>
                         </div>
-                        
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label for="description" class="form-label">
                                 <i class="fas fa-align-left me-2"></i>Açıklama
                             </label>
-                            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                         </div>
-                        
-                        
-
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label for="image" class="form-label">
-                                <i class="fas fa-image me-2"></i>Paydaş Logosu
+                                <i class="fas fa-image me-2"></i>Logo (500x500)
                             </label>
-                            <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
-                            <div id="imageError" class="alert alert-danger mt-2 d-none"></div>
+                            <div class="image-upload-container">
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                                <div id="imagePreview" class="image-preview mt-2" style="display: none;">
+                                    <img src="" alt="Preview" style="max-width: 200px;">
+                                </div>
+                                <div class="alert alert-info mt-2">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Lütfen tam olarak 500x500 piksel boyutunda bir görsel yükleyin.
+                                </div>
+                                <div id="imageError" class="alert alert-danger mt-2" style="display: none;"></div>
+                            </div>
                         </div>
-                        
-                        <div class="d-flex justify-content-end align-items-center mt-4">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-plus"></i>
-                                Paydaş Ekle
+                                <i class="fas fa-save me-2"></i>Kaydet
                             </button>
                         </div>
                     </form>
@@ -210,106 +213,56 @@ require_once '../php/config.php';
         </div>
     </div>
 
-    <script>
-        // Yukarı çık butonu kontrolü
-        const scrollToTopBtn = document.getElementById("scrollToTop");
-        
-        window.addEventListener("scroll", function() {
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                scrollToTopBtn.classList.remove("d-none");
-            } else {
-                scrollToTopBtn.classList.add("d-none");
-            }
-        });
-
-        scrollToTopBtn.addEventListener("click", function() {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        });
-
-        // Görsel boyut kontrolü
-        document.getElementById('image').addEventListener('change', function() {
-            var file = this.files[0];
-            if (!file) return;
-
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var img = new Image();
-                img.onload = function() {
-                    // En-boy oranı kontrolü
-                    const aspectRatio = this.width / this.height;
-                    if (aspectRatio < 0.8 || aspectRatio > 1.2) {
-                        const message = "Görsel oranı uygun değil! Lütfen kare formatta (1:1) bir görsel seçin.";
-                        const errorDiv = document.getElementById('imageError');
-                        errorDiv.textContent = message;
-                        errorDiv.classList.remove('d-none');
-                        document.getElementById('image').value = '';
-                        setTimeout(() => {
-                            errorDiv.classList.add('d-none');
-                        }, 5000);
-                        return;
-                    }
-
-                    // Boyut kontrolü
-                    if (this.width !== 500 || this.height !== 500) {
-                        const message = `Görsel boyutu (${this.width}x${this.height}) uygun değil. Lütfen 500x500 piksel kullanın.`;
-                        const errorDiv = document.getElementById('imageError');
-                        errorDiv.textContent = message;
-                        errorDiv.classList.remove('d-none');
-                        document.getElementById('image').value = '';
-                        setTimeout(() => {
-                            errorDiv.classList.add('d-none');
-                        }, 5000);
-                    }
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        });
-
-        // URL hash değişimini ve mesajları yönet
-        function initPage() {
-            if(window.location.hash === '#paydas') {
-                $('.nav-link').removeClass('active');
-                $('.tab-pane').removeClass('show active');
-                $('a[href="#paydas"]').addClass('active');
-                $('#paydas').addClass('show active');
-            }         
-        }
-         
-        document.addEventListener('DOMContentLoaded', initPage);
-        window.addEventListener('hashchange', initPage);
-    </script>
-
-    <!-- Yukarı Çık Butonu -->
-    <button id="scrollToTop" class="position-fixed d-none" style="bottom: 30px; right: 30px; z-index: 9999; width: 50px; height: 50px; border: none; background: none; opacity: 0;">
-        <div class="scroll-btn-wrapper">
-            <div class="scroll-btn-circle">
-                <i class="fas fa-rocket"></i>
+    <!-- Düzenleme Modal -->
+    <div class="modal fade" id="editStakeholderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background: rgba(0, 0, 0, 0.9); border: 1px solid rgba(201, 208, 17, 0.3);">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editStakeholderModalLabel" style="color: #c9d011; font-family: 'Press Start 2P', system-ui; font-size: 1.2rem;">Paydaş Düzenle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editStakeholderForm" action="../php/ogdınamık/stakeholders/uptedit.php" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" id="edit_id" name="id">
+                        <div class="mb-3">
+                            <label for="edit_name" class="form-label">
+                                <i class="fas fa-building me-2"></i>Paydaş Adı
+                            </label>
+                            <input type="text" class="form-control" id="edit_name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_description" class="form-label">
+                                <i class="fas fa-align-left me-2"></i>Açıklama
+                            </label>
+                            <textarea class="form-control" id="edit_description" name="description" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-image me-2"></i>Mevcut Logo
+                            </label>
+                            <div id="currentImageContainer" class="text-center mb-3"></div>
+                            <label for="edit_image" class="form-label">
+                                <i class="fas fa-upload me-2"></i>Yeni Logo (İsteğe bağlı)
+                            </label>
+                            <input type="file" class="form-control" id="edit_image" name="image" accept="image/*">
+                            <div class="alert alert-info mt-2">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Yeni bir görsel yüklerseniz, 500x500 piksel boyutunda olmalıdır.
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="scroll-btn-rays"></div>
         </div>
-    </button>
+    </div>
 
-    <script>
-        // Yukarı çık butonu kontrolü
-        window.onscroll = function() {
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                document.getElementById("scrollToTop").style.display = "block";
-            } else {
-                document.getElementById("scrollToTop").style.display = "none";
-            }
-        };
-
-        // Yukarı çık butonu tıklama olayı
-        document.getElementById("scrollToTop").addEventListener("click", function() {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        });
-    </script>
+    <!-- JavaScript -->
+    <script src="scripts/admin.js"></script>
 </body>
 </html>

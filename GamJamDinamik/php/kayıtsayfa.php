@@ -9,15 +9,66 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 function validEmailDomain($email) {
     $invalidDomains = [
-        'gmil.com',
-        'gmial.com',
-        'gmai.com',
-        'gmal.com',
-        'gmailcom',
-        'www.gmail.com',
-        'mail.gmail.com', // Dikkatli kullanın!
-        'googlemail.com',
-        'google.com',
+        [
+    // Gmail Varyasyonları
+    'gmail.com',        // Doğru Gmail
+    'gmil.com',
+    'gmial.com',
+    'gmai.com',
+    'gmal.com',
+    'gmailcom',         // Eksik nokta
+    'www.gmail.com',    // Gereksiz www
+    'mail.gmail.com',   // Alt alan adı (eğer kabul etmek istemiyorsanız çıkarılabilir)
+    'googlemail.com',   // Eski Google Mail varyasyonu
+    'google.com',       // Hatalı genel Google alanı (kullanıcılar bazen karıştırır)
+
+    // Hotmail Varyasyonları
+    'hotmail.com',      // Doğru Hotmail
+    'hotnail.com',      // n yerine m
+    'hotmal.com',       // i eksik
+    'hotmail.co.uk',    // İngiltere uzantısı (diğer ülke uzantıları da eklenebilir)
+    'hotmail.fr',       // Fransa uzantısı
+    'hotmail.de',       // Almanya uzantısı
+    'hotmail.it',       // İtalya uzantısı
+    'hotmail.es',       // İspanya uzantısı
+    'hotmail.ca',       // Kanada uzantısı
+    'hotmail.com.tr',   // Türkiye uzantısı (varsa ve kabul ediyorsanız)
+    'hotrmail.com',     // Fazla r
+    'htomail.com',      // Harf yer değişimi
+    'hotmaill.com',     // Fazla l
+    'homtail.com',      // Harf yer değişimi
+    'hotmailcom',       // Eksik nokta
+    'www.hotmail.com',  // Gereksiz www
+
+    // Outlook Varyasyonları (Hotmail ile genellikle birlikte kullanılır)
+    'outlook.com',      // Doğru Outlook
+    'outlok.com',
+    'outloook.com',
+    'outlook.co.uk',
+    'outlook.com.tr',
+    'www.outlook.com',
+    'live.com',         // Eski Live Mail
+    'msn.com',          // Eski MSN Mail
+
+    // Yahoo Varyasyonları
+    'yahoo.com',        // Doğru Yahoo
+    'yaho.com',
+    'yhoo.com',
+    'yahoomail.com',
+    'yahoo.co.uk',
+    'yahoo.com.tr',
+    'www.yahoo.com',
+    'mail.yahoo.com',
+
+    // Diğer Popüler E-posta Sağlayıcıları (İsteğe bağlı olarak eklenebilir)
+    'aol.com',          // AOL Mail
+    'protonmail.com',   // Proton Mail
+    'icloud.com',       // iCloud Mail
+    'mail.com',         // Mail.com
+    'yandex.com',       // Yandex Mail
+    'web.de',           // Almanya'da popüler
+    'gmx.de'            // Almanya'da popüler
+    ]
     ];
 
     $validExtensions = [

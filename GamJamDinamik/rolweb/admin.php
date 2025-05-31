@@ -14,6 +14,8 @@ if (!isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTGET Yönetim Paneli</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../WebSayfası/resim/logo.png">
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/admin.css">
@@ -142,13 +144,15 @@ if (!isset($_SESSION['user_id'])) {
                             </div>
                             <div class="card-footer">
                                 <div class="btn-group">
-                                    <button class="btn btn-icon" title="Düzenle" onclick="editStakeholder(<?php echo $stakeholder['id']; ?>)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-icon" title="Sil" onclick="deleteStakeholder(<?php echo $stakeholder['id']; ?>)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
+                        <button class="btn btn-icon" title="Düzenle" onclick="editStakeholder(<?php echo $stakeholder['id']; ?>)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-icon" title="Sil" onclick="deleteStakeholder(<?php echo $stakeholder['id']; ?>)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="btn btn-icon" title="Akifliği Ayarla" onclick="toggleStakeholderStatus(<?php echo $stakeholder['id']; ?>)">
+                            <i class="fas fa-toggle-on"></i> </button>
+                    </div>
                             </div>
                         </div>
                     <?php
@@ -244,10 +248,15 @@ if (!isset($_SESSION['user_id'])) {
                             <label for="edit_image" class="form-label">
                                 <i class="fas fa-upload me-2"></i>Yeni Logo (İsteğe bağlı)
                             </label>
-                            <input type="file" class="form-control" id="edit_image" name="image" accept="image/*">
-                            <div class="alert alert-info mt-2">
-                                <i class="fas fa-info-circle me-2"></i>
-                                Yeni bir görsel yüklerseniz, 500x500 piksel boyutunda olmalıdır.
+                            <div class="image-upload-container">
+                                <input type="file" class="form-control" id="edit_image" name="image" accept="image/*">
+                                <div id="editImagePreview" class="image-preview mt-2" style="display: none;">
+                                    <img src="" alt="Preview" style="max-width: 200px;">
+                                </div>
+                                <div class="alert alert-info mt-2">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Yeni bir görsel yüklerseniz, 500x500 piksel boyutunda olmalıdır.
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
